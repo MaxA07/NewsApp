@@ -11,6 +11,7 @@ import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentArticleBinding
 import com.example.newsapp.ui.NewsActivity
 import com.example.newsapp.ui.NewsViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class ArticleFragment : Fragment(R.layout.fragment_article) {
 
@@ -35,6 +36,10 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             article.url?.let { loadUrl(it) }
         }
 
+        binding?.fab?.setOnClickListener {
+            viewModel.saveArticle(article)
+            Snackbar.make(view, "Article saved successfully", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
