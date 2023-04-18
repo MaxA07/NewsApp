@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
@@ -25,7 +26,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
-    lateinit var binding: FragmentSearchNewsBinding
+    private var binding: FragmentSearchNewsBinding? = null
     val TAG = "SearchNewsFragment"
 
     override fun onCreateView(
@@ -34,7 +35,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchNewsBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,8 +43,18 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         viewModel = (activity as NewsActivity).viewModel
         setupRecyclerView()
 
+        newsAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("article", it)
+            }
+            findNavController().navigate(
+                R.id.action_searchNewsFragment_to_articleFragment,
+                bundle
+            )
+        }
+
         var job: Job? = null
-        binding.etSearch.addTextChangedListener {editable ->
+        binding?.etSearch?.addTextChangedListener { editable ->
             job?.cancel()
             job = MainScope().launch {
                 delay(SEARCH_NEWS_TIME_DELAY)
@@ -78,19 +89,24 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     }
 
     private fun hideProgressBar() {
-        binding.paginationProgressBar.visibility = View.INVISIBLE
+        binding?.paginationProgressBar?.visibility  = View.INVISIBLE
     }
 
     private fun showProgressBar() {
-        binding.paginationProgressBar.visibility = View.VISIBLE
+        binding?.paginationProgressBar?.visibility = View.VISIBLE
     }
 
     private fun setupRecyclerView() {
         newsAdapter = NewsAdapter()
-        binding.rvSearchNews.apply {
+        binding?.rvSearchNews?.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }
