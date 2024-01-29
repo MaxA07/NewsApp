@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
@@ -67,6 +68,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 is Resource.Error -> {
                     hideProgressBar()
                     response.massage?.let { message ->
+                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "An error occured: $message")
                     }
                 }
