@@ -11,10 +11,10 @@ import com.bumptech.glide.Glide
 import com.example.newsapp.R
 import com.example.newsapp.models.Article
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.AreicleViewHolder>() {
+class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
 
-    inner class AreicleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+    inner class ArticleViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     private val differCallback = object : DiffUtil.ItemCallback<Article>() {
 
@@ -29,8 +29,8 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.AreicleViewHolder>() {
 
     val differ = AsyncListDiffer(this, differCallback)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AreicleViewHolder {
-        return AreicleViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
+        return ArticleViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_article_preview,
                 parent,
@@ -39,7 +39,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.AreicleViewHolder>() {
         )
     }
 
-    override fun onBindViewHolder(holder: AreicleViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
         holder.itemView.apply {
             Glide.with(this).load(article.urlToImage).into(findViewById(R.id.ivArticleImage))
